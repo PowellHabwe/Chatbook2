@@ -1,0 +1,115 @@
+{% extends 'main.html'%}
+{% block content%}
+
+  <main class="profile-page layout layout--3">
+    <div class="container">
+      <!-- Topics Start -->
+      {% include 'base/topics_component.html'%}
+      <!-- Topics End -->
+
+      <!-- Room List Start -->
+      <div class="roomList">
+        <div class="profile">
+          <div class="profile__avatar">
+            <div class="avatar avatar--large active">
+              <img src="{{ user.avatar.url}}" />
+            </div>
+          </div>
+          <div class="profile__info">
+            {% if request.user == user %}
+            <a class="btn btn--main btn--pill">Post Detail</a>
+            {% endif %}
+          </div>
+          <div style="text-align:center;" class="profile__about">
+            {% comment %} <h3>Caption</h3>
+            <p>
+              {{post.caption}} 
+            </p> {% endcomment %}
+
+            {% if post.image %}
+            <div class="post-images">
+                <div  style="width: 100%;" class="post-images2">
+                    <a href="{{post.image.url}}">  
+                        <img src="{{post.image.url}}" alt="">
+                    </a> 
+                    <p>
+                    <p><a style="color:white;" href="#">{{post.caption}}</a></p>
+                    </p>
+                   
+                </div>
+            </div> 
+            {% elif post.video %}
+            <div class="post-images">
+                <div style="width: 100%; "  class="post-images2">
+                    <video width="870" height="400" controls> 
+                        <source src="{{ post.video.url }}">
+                    </video>
+                    <p>
+                <p><a  style="color:white;" href="#">{{post.caption}}</a></p>
+                    </p>
+                </div>
+            </div>
+            {% endif %}
+            <h3 style="margin-top: 25px">Comments</h3>
+            {% if not post.comments.all %}
+            No comments yet
+            {% else %}
+            <p>
+              {% for comment in post.comments.all%}
+              <div style="margin-top: 5px">
+              <div >Comment By: {{comment.name}}</div>
+              <div>{{comment.body}}</div>
+              </div>
+              {% comment %} {{ comment.date_added}} {% endcomment %}
+              {% comment %} {{comment.body}} {% endcomment %}
+              {% endfor %}
+            </p>
+            {% endif %}
+          </div>
+        </div>
+
+        <div class="section">
+          <div class="container">
+            <div class="row">
+              <div class="col-lg-8 mx-auto">
+              </div>
+            </div>
+          </div>
+        </div>
+
+       
+        {% include 'base/post_component.html'%}
+      </div>
+      <!-- Room List End -->
+
+      <!-- Activities Start -->
+      <div class="activities">
+        <div class="activities__header">
+          <h2>Comment Here</h2>
+        </div>
+        <div style="display: flex, align-items:center, flex-direction: column;">
+        <form  method="POST" action="{% url 'post_detail1' post.id %}">
+          {% csrf_token %}
+          {% comment %} {{ form.as_p }} {% endcomment %}
+          <h2 style="display: flex, align-items:center"
+          >Comment Body
+          </h2>
+          {{form.body}}
+          <h2>Name</h2>
+
+          {{form.name}}
+          <input type="submit" value="Add Comment">
+          {% comment %} <button>Add Comment</button> {% endcomment %}
+        </form>
+      </div>
+
+      
+      </div>
+      
+       
+      
+  
+      <!-- Activities End -->
+    </div>
+  </main>
+  {% endblock content %}

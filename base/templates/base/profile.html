@@ -1,0 +1,74 @@
+{% extends 'main.html'%}
+{% block content%}
+
+  <main class="profile-page layout layout--3">
+    <div class="container">
+      <!-- Topics Start -->
+      {% include 'base/topics_component.html'%}
+      <!-- Topics End -->
+
+      <!-- Room List Start -->
+      <div class="roomList">
+        <div class="profile">
+          <div class="profile__avatar">
+            <div class="avatar avatar--large active">
+              <img src="{{ user.avatar.url}}" />
+            </div>
+          </div>
+          <div class="profile__info">
+            <h3>{{user.username }}</h3>
+            <p>@{{user.username }}</p>
+            {% if request.user == user %}
+            <a href="{% url 'update-user' %}" class="btn btn--main btn--pill">Edit Profile</a>
+            {% endif %}
+          </div>
+          <div   class="profile__about">
+            {% comment %} <form action="follow" method="POST">
+              {% csrf_token %}
+              <input type="hidden" value="{{user.email}}" name="follower"/>
+              <input type="hidden" value="{{user_object.username}}" name="user"/>
+
+              <a data-ripple=""><button type="submit">{{button_text}}</button></a>
+            </form> {% endcomment %}
+
+            {% comment %} {% if user_followers == 0 or user_followers == 1 %}
+            <h3>{{user_followers}} Follower </h3>
+            {% else %}
+            <h3>{{user_followers}} Followers </h3>
+            {% endif %} {% endcomment %}
+            {% comment %} <h3>{{user_following}} Following </h3>
+            <h3>{{user_followers}} Followers </h3>  {% endcomment %}
+				 
+            <h3 style="display:flex;align-items:center;justify-content: center;">About</h3>
+            <p style="display:flex;align-items:center;justify-content: center;">
+              {{user.bio}}
+            </p>
+          </div>
+        </div>
+
+        <div style="display:flex;align-items:center;justify-content: center;" class="roomList__header">
+          <div>
+            <h2   >Study Rooms Hosted by {{ user.username }}</h2>
+            <h2 style="display:flex;align-items:center;justify-content: center;">Rooms {{ room_length }}</h2>
+              {% if post_length == 0 %}
+                <h2 style="display:flex;align-items:center;justify-content: center;">No Posts</h2>
+              {% elif post_length == 1 %}
+                <h2 style="display:flex;align-items:center;justify-content: center;">1 Post</h2>
+              {% else %}
+                <h2 style="display:flex;align-items:center;justify-content: center;">Posts {{ post_length }}</h2>
+              {% endif %}
+           
+          </div>
+        </div>
+        {% include 'base/feed_component.html'%}
+        <h2 style="display:flex;align-items:center;justify-content: center;margin-bottom: 20px;" >Posts by {{ user.username }}</h2>
+        {% include 'base/post_component.html'%}
+      </div>
+      <!-- Room List End -->
+
+      <!-- Activities Start -->
+      {% include 'base/activity_component.html'%} 
+      <!-- Activities End -->
+    </div>
+  </main>
+  {% endblock content %}

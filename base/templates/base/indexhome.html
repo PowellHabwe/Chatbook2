@@ -1,0 +1,464 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    {% comment %} <link rel="shortcut icon" href="{% static 'images/favicon.ico' %}" type="image/x-icon"> {% endcomment %}
+    <title>Social</title>
+    <!-- style css link -->
+    <link rel="stylesheet" href="{% static 'style.css' %}">
+    <!-- fontawesome css link -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css" integrity="sha512-KfkfwYDsLkIlwQp6LFnl8zNdLGxu9YAA1QvwINks4PhcElQSvqcyVLLD9aMhXd13uQjoXtEKNosOWaZqXgel0g==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+
+</head>
+<body>
+    
+<!-- header section start -->
+     <header>
+        <div class="header-container">
+            <div class="header-wrapper">
+                <div class="logoBox">
+                    <img style="border-radius: 50%" src="{% static 'images/logo.png' %}" alt="logo">
+                </div>
+                <div  class="searchBox">
+                    <input style="background-color: #f1f3f5e1;color:black;" type="search">
+                    <i class="fas fa-search"></i>
+                </div>
+                <div class="iconBox1">
+
+                    <i style="color: #2b2c44;"class="fa-solid fa-user-group"></i>
+                    <i style="color: #2b2c44;"class="fa-solid fa-gamepad"></i>
+                    <a href="{% url 'index_home' %}"><i class="fa-solid fa-house"></i></a>
+                    <a href="{% url 'home' %}"><i class="fa-regular fa-message"></i></a>
+                    <i class="fa-solid fa-video"></i>
+                </div>
+                <div class="iconBox2">
+                    <i class="fa-solid fa-circle-plus"></i>
+                    {% comment %} <i class="fa-solid fa-bell"><p>Logout</p></i> {% endcomment %}
+                    {% if request.user.is_authenticated %}
+                    <a href="{% url 'update-user' %}">
+                    {% comment %} <p style="color:white;margin-top:7px;margin-left: -150px;"><span>@{{ request.user.username }}</span></p> {% endcomment %}
+                    </a>
+                    {% else %}
+                    <p><a href="{% url 'login' %}">Log In </a></p>
+                    {% endif %}
+                    {% if request.user.is_authenticated %}
+                    
+                    <label><a href="{% url 'update-user' %}"><img src="{{request.user.avatar.url}}" alt="user"></a></label>
+                    
+                    {% endif %}
+                    <i class="fa-solid fa-caret-down"></i>
+                </div>
+            </div>
+        </div>                   
+    </header>
+
+
+
+<!-- header section end -->
+<!-- home section start -->
+
+
+<div class="home">
+    <div class="container">
+        <div class="home-weapper">
+
+            <!-- home left start here -->
+            <div class="home-left">
+
+                <div class="profile">
+                    <img src="{{request.user.avatar.url}}"  alt="user">
+                    <a href="{% url 'user-profile' request.user.id %}"><h3>{{request.user.username }}</h3></a>
+                </div>
+
+                <form action="upload" method="POST" enctype="multipart/form-data">
+                    {% csrf_token %}
+                <h3 class="mini-headign">Upload Image</h3>
+                <div>
+                    <input type="file" name="image_upload">
+                    <textarea style="padding: 20px 20px 20px 60px;
+                    width: 100%;
+                    background: #1b1b29;
+                    border: none;
+                    height: 100px;
+                    border-radius: 10px;
+                    box-shadow: 0 2px 5px 0 var(--shadow);
+                    color: white;" class="button soft-warning small" placeholder="caption..." name="caption"></textarea>
+                    <button style= "padding: 8px;
+                    background: var(--white);
+                    border: none;
+                    box-shadow: 0 2px 6px 0 var(--shadow);
+                    border-radius: 50px;
+                    color: #4575b3;
+                    font-weight: 600;
+                    font-size: 15px;
+                    margin-top: 10px;
+                    width: 100%;
+                    transition: .4s;" class="button bg-blue-700" type="submit">Upload Image</button>
+                                       
+                </div>
+                </form>
+
+                <div style="margin-top:2em;" class="video">
+
+                <form action="upload" method="POST" enctype="multipart/form-data">
+                    {% csrf_token %}
+                <h3 class="mini-headign">Upload Video</h3>
+                <div>
+                    <input  type="file" name="video_upload">
+                    <textarea style="padding: 20px 20px 20px 60px;
+                    width: 100%;
+                    background: #1b1b29;
+                    border: none;
+                    height: 100px;
+                    border-radius: 10px;
+                    box-shadow: 0 2px 5px 0 var(--shadow);
+                    color: white;" class="button soft-warning small" placeholder="caption..." name="caption"></textarea>
+                    
+                    <button style= "padding: 8px;
+                    background: var(--white);
+                    border: none;
+                    box-shadow: 0 2px 6px 0 var(--shadow);
+                    border-radius: 50px;
+                    color: #4575b3;
+                    font-weight: 600;
+                    font-size: 15px;
+                    margin-top: 10px;
+                    width: 100%;
+                    transition: .4s;" class="button bg-blue-700" type="submit">Upload Video</button>
+                    {% comment %} <a href="#" class="button soft-warning small"> Choose file</a> {% endcomment %}
+                </div>
+                </form>
+                </div>
+
+               
+                <div style="margin-top:2em;" class="pages">
+                    <h4 class="mini-headign">Available Rooms:{{room_count}}</h4>
+                    {% for room in rooms %}
+                    {% comment %} <label>
+                        <img src="{% static 'images/messenger.png' %}" alt="messenger">
+                        <span>messenger</span>
+                    </label> {% endcomment %}
+                    <label>
+                        <img src="{% static 'images/messenger.png' %}" alt="instagram">
+                        <span>{{room.name}}</span>
+                    </label>
+                    {% endfor %}
+                    <a href="{% url 'home' %}" style="display:flex;align-items:center;justify-content:center;" class="see-more-btn">Chat Rooms <i class="fa-solid fa-angle-down"></i></a>
+                </div>
+
+                <div class="group">
+                    <h4 class="mini-headign">Topics: <span>{{topics.count}}</span></h4>
+                    {% for topic in topics%}
+                    <label>
+                        <img src="{% static 'images/gg.png' %}" alt="group01">
+                        <a href="{% url 'home' %}?q={{ topic.name }}"><span>{{ topic.name }}</span>: <span>{{topic.room_set.all.count}} Rooms</span></a>
+                    </label>
+                    
+                    {% comment %} <label>
+                        <img src="{% static 'images/gg2.png' %}" alt="group02">
+                        <span>website design</span>
+                    </label>
+
+                    <label>
+                        <img src="images/gg3.png" alt="group03">
+                        <span>ZED.zahidul</span>
+                    </label> {% endcomment %}
+                    {% endfor %}
+                    <button class="see-more-btn">Socialise More <i class="fa-solid fa-angle-down"></i></button>
+                </div>
+                <div class="games">
+                    <h4 class="mini-headign">Games</h4>
+                    <label>
+                        <img src="{% static 'images/game.png' %}" alt="game01">
+                        <a href="{% url 'snake' %}"><span>Snake Game</span></a>
+                    </label>
+                    {% comment %} <label>
+                        <img src="{% static 'images/game2.png' %}" alt="game02">
+                        <span>Free Play Games</span>
+                    </label> {% endcomment %}
+                    <button class="see-more-btn">Bored? Play a game <i class="fa-solid fa-angle-down"></i></button>
+                </div>
+
+                <div class="explore">
+                    <h4 class="mini-headign">Explore</h4>
+                   
+                    <a href="#"><i class="fa-solid fa-user-group"></i> Chat Groups</a>
+                    <a href="#"><i class="fa-solid fa-star"></i></i> Posts</a>
+                    {% comment %} <a href="#"><i class="fa-solid fa-bookmark"></i></i> Saves</a> {% endcomment %}
+                    <a href="#"><i class="fa-solid fa-clock"></i> Events</a>
+                    {% comment %} <a href="#"><i class="fa-solid fa-flag"></i> Pages</a> {% endcomment %}
+
+                    <div><label class="darkTheme"> <span></span></label> Apply Light Theme</div>
+
+                    <button class="see-more-btn">See more <i class="fa-solid fa-angle-down"></i></button>
+                </div>
+                
+                
+            </div><!-- home left end here -->
+
+            <!-- home center start here -->
+
+            <div class="home-center">
+                <div class="home-center-wrapper">
+                   
+                    <div class="stories">
+                        <h3 class="mini-headign">Stories</h3>
+                        <div class="stories-wrapper">
+                            {% for suggestion in suggestions_username_profile_list %}
+                            <div class="single-stories">
+                                <label><img src="{{ suggestion.avatar.url}}"  alt="user"></label>
+                                <div>
+                                    <img src="{{ suggestion.avatar.url}}"  alt="user">
+                                    <a href="{% url 'user-profile' suggestion.id %}">
+                                    <i class="fa-solid fa-circle-plus"></i>
+                                    <b>User Profile</b>
+                                    </a>
+                                </div>
+                            </div>
+                            {% endfor %}
+
+
+
+
+                        </div>
+                    </div>
+
+                 
+
+                    <div class="createPost">
+                        {% comment %} <div class="post-icon">
+                            <a href="#" style="background: #ffebed;">
+                            <i style="background: #ff4154;" class="fa-solid fa-camera"></i>
+                            Gallery</a>
+
+                            <a href="#" style="background: #ccdcff;">
+                            <i style="background: #0053ff;" class="fa-solid fa-video"></i>
+                            Video</a>
+
+                            <a href="#" style="background: #d7ffef;">
+                            <i style="background: #00d181;" class="fa-solid fa-location-dot"></i>
+                            Location</a>
+
+                            <a href="#" style="background: #cff3ff;">
+                            <i style="background: #04c3ff;" class="fa-solid fa-gift"></i>
+                            Gift</a>
+                            
+                            <a href="#" style="background: #fff4d1;">
+                            <i style="background: #ffca28;" class="fa-solid fa-face-grin-beam"></i>
+                            Feeling / Acrivity</a>
+
+                        </div> {% endcomment %}
+
+                    </div>
+
+                    {% for post in posts reversed %}
+                    <div class="fb-post1" style="margin-bottom:10px">
+                        <div class="fb-post1-container">
+                            <div class="fb-post1-header">
+                                {% comment %} <ul>
+                                    <li class="active">popular</li>
+                                    <li>recent</li>
+                                    <li>most view</li>
+                                </ul> {% endcomment %}
+                            </div>
+                            <div class="fb-p1-main" >
+                                <div class="post-title">
+                                    <a href="{% url 'user-profile' post.host.id %}">
+                                    <img  src="{{post.host.avatar.url}}" alt="user picture">
+                                    </a>
+                                    <ul>
+                                        <li><h3>@{{post.host.username}}<span> </span></h3></li>  {% comment %}{{post.created_at|timesince }} {% endcomment %}
+                                        <li><span>{{post.created_at}}</span></li>
+                                    </ul>
+            
+                                   
+                                    {% if post.host == request.user %}
+                                    <a  href="{% url 'delete-post' post.id %}">
+                                    <button style="font-size: 12px;
+                                    border: none;
+                                    padding: 3px 10px;
+                                    background: #b40a3d;
+                                    color: white;
+                                    border-radius: 50px;
+                                    cursor: pointer;">Delete</button>
+                                    </a>
+                                    {% endif %}
+
+                                </div>
+                                {% if post.image %}
+                                <div class="post-images">
+                                    <div  style="width: 100%;" class="post-images2">
+                                        <a href="{{post.image.url}}">  
+                                            <img src="{{post.image.url}}" alt="">
+                                        </a> 
+                                        <p>
+                                    <p><a style="color:white;" href="#">{{post.caption}}</a></p>
+
+                                            {% comment %} <a href="#"><strong>Caption:</strong>{{post.caption}}</a> {% endcomment %}
+                                        </p>
+                                       
+                                    </div>
+                                </div>
+                                {% elif post.video %}
+                                <div class="post-images">
+                                    <div style="width: 100%; "  class="post-images2">
+                                        <video width="870" height="400" controls> 
+                                            <source src="{{ post.video.url }}">
+                                        </video>
+                                        <p>
+                                    <p><a  style="color:white;" href="#">{{post.caption}}</a></p>
+                                            {% comment %} <a href="#"><strong>Caption:</strong>{{post.caption}}</a> {% endcomment %}
+                                        </p>
+                                        {% comment %} <img src="{% static 'images/pp4.jpg' %}" alt="post images 04"> {% endcomment %}
+                                    </div>
+                                </div>
+                                {% endif %}
+
+
+                                <div class="like-comment">
+                                    <ul>
+                                        <a href="like_post?post_id={{post.id}}" >
+                                        <li >
+                                            <img src="{% static 'images/like.png' %}" alt="like">
+                                            {% if post.no_of_likes == 0 %}
+                                            <span >0 likes</span>
+                                            {% elif post.no_of_likes == 1 %}
+                                            <span>{{post.no_of_likes}} like</span>
+                                            {% else %}
+                                            <span> {{post.no_of_likes}}likes</span>
+                                            {% endif %}
+                                        </li>
+        
+                                        </a>
+                                        <a  href="{% url 'post_detail1' post.id %}"><li><i class="fa fa-comment"></i> <span >Comment</span></li></a>
+                                        {% comment %} <li><i class="fa-solid fa-share-from-square"></i> <span>254 share</span></li> {% endcomment %}
+                                    </ul>
+                                </div>  
+                                {% comment %} <div class="like-comment">
+                                    <ul>
+                                        <li>
+                                            <img src="images/love.png" alt="love">
+                                            <img src="images/like.png" alt="like">
+                                            <span>22k like</span>
+                                        </li>
+                                        <li><i class="fa-regular fa-comment-dots"></i> <span>555 comments</span></li>
+                                        <li><i class="fa-solid fa-share-from-square"></i> <span>254 share</span></li>
+                                    </ul>
+                                </div> {% endcomment %}
+                            </div>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div> <!-- home center wrapper end -->
+            </div> <!-- home center end -->
+
+            <div class="home-right">
+                <div class="home-right-wrapper">
+
+                    <div class="event-friend">
+                        <div class="event">
+                            <h3 class="heading">Maverick Events <a href="{% url 'logout' %}"><span>Log Out</span></a></h3>
+                            <img src="{% static 'images/eve.jpg' %}" alt="event-img">
+                            <div class="event-date">
+                                <h3>21 <b>july</b></h3>
+                                <h4>Interested in upcoming events? <span>Maverick Events</span></h4>
+                            </div>
+                            <button><i class="fa-regular fa-star"></i> interested</button>
+                        </div>
+
+                        <hr>
+                    
+                        {% comment %} <div class="friend">
+                            <h3 class="heading">Friend Requests <span>see all</span></h3>
+                            <ul>
+                                <li><img src="{% static 'images/user4.jpg' %}" alt="user"></li>
+                                <li>
+                                    <b>armanul islam</b>
+                                    <p>Lorem ipsum dolor sit amet.</p>
+                                    <button>confirm</button><button class="friend-remove">remove</button>
+                                </li>
+                            </ul>
+                        </div> {% endcomment %}
+
+                    </div>
+
+                    <div class="create-page">
+                        <ul>
+                            <li>
+                                <i class="fa-solid fa-circle-plus"></i>
+                                <a href="{% url 'home' %}"><h4>Create ChatRooms</h4></a>
+                                <i class="fa-solid fa-magnifying-glass"></i>
+                            </li>
+                            <li>
+                                <img src="{% static 'images/group.jpg' %}" alt="groups">
+                            </li>
+                            <li>
+                                <b>Unlimited Member Count<span>Unlimited Conversation Topics</span></b>
+                            </li>
+                        </ul>
+                    </div>
+
+                    <div class="messenger">
+                        <div class="messenger-search">
+                            <i class="fa-solid fa-user-group"></i>
+                            <h4>Chat Activity</h4>
+                            <input name="q" placeholder="Search">
+                            <i class="fa-solid fa-magnifying-glass"></i>
+                        </div>
+                        <ul>
+                            <li>
+                                <i class="fa-brands fa-facebook-messenger"></i>
+                                <a href="{% url 'home' %}">
+                                <b>Click to be redirected into the chatrooms </b>
+                                </a>
+                            </li>
+                            {% for message in room_messages%}
+                            <li>
+                                <img style="    width: 50px;
+                                border-radius: 50px;
+                                height: 50px;
+                                " src="{{ message.user.avatar.url}}" alt="user">
+                                <b>  <h4 style="font-size:10px;"> {{ message.user }} replied to post: <a style="color:white;" href="{% url 'room' message.room.id  %}">{{ message.room }}</a></h4><h4 style="font-size:10px;">{{ message.created|timesince}} ago</h4> <span>{{ message.body }}</span></b>
+                                {% comment %} <b> <span>{{ message.created|timesince}} ago</span> <span>{{ message.body }}</span></b> {% endcomment %}
+                                
+                                {% if request.user == message.user %}
+                                <a  href="{% url 'delete-message' message.id %}"><i class="fa-brands fa-facebook-messenger"></i></a>
+                                {% endif %}
+                            </li>
+                            {% endfor %}
+                    
+                        </ul>
+                    </div>
+
+                </div><!-- home right wrapper end -->
+            </div><!-- home right end -->
+
+
+
+
+
+
+        </div>
+    </div>
+</div>
+
+
+
+
+<!-- home section end -->
+
+<script>
+    var darkButton = document.querySelector(".darkTheme");
+
+    darkButton.onclick = function(){
+        darkButton.classList.toggle("button-Active");
+        document.body.classList.toggle("dark-color")
+    }
+
+</script>
+
+</body>
+</html>

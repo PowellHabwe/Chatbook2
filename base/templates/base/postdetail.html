@@ -1,0 +1,76 @@
+{% extends 'main.html'%}
+{% block content%}
+
+  <main class="profile-page layout layout--3">
+    <div class="container">
+      <!-- Topics Start -->
+      {% include 'base/topics_component.html'%}
+      <!-- Topics End -->
+
+      <!-- Room List Start -->
+      <div class="roomList">
+        <div class="profile">
+          <div class="profile__avatar">
+            <div class="avatar avatar--large active">
+              <img src="{{ user.avatar.url}}" />
+            </div>
+          </div>
+          <div class="profile__info">
+            <h3>{{user.username }}</h3>
+            <p>@{{user.username }}</p>
+            {% if request.user == user %}
+            <a href="{% url 'update-user' %}" class="btn btn--main btn--pill">Post Detail</a>
+            {% endif %}
+          </div>
+          <div class="profile__about">
+            <form action="follow" method="POST">
+              {% csrf_token %}
+              <input type="hidden" value="{{user.email}}" name="follower"/>
+              <input type="hidden" value="{{user_object.username}}" name="user"/>
+              {% comment %} Fix a bug {% endcomment %}
+
+              {% comment %} <a data-ripple=""><button type="submit">{{button_text}}</button></a> {% endcomment %}
+              <a data-ripple=""><button type="submit">{{button_text}}</button></a>
+            </form>
+
+            {% comment %} {% if user_followers == 0 or user_followers == 1 %}
+            <h3>{{user_followers}} Follower </h3>
+            {% else %}
+            <h3>{{user_followers}} Followers </h3>
+            {% endif %} {% endcomment %}
+            {% comment %} <h3>{{user_following}} Following </h3>
+            <h3>{{user_followers}} Followers </h3>  {% endcomment %}
+				 
+            <h3>About</h3>
+            <p>
+              {{user.bio}}
+            </p>
+          </div>
+        </div>
+
+        <div class="roomList__header">
+          <div>
+            <h2>Study Rooms Hosted by {{ user.username }}</a>
+            <h2>Rooms {{ room_length }}</a>
+              {% if post_length == 0 %}
+                <h2>No Posts</a>
+              {% elif post_length == 1 %}
+                <h2>1 Post</a>
+              {% else %}
+                <h2>Posts {{ post_length }}</a>
+              {% endif %}
+            </h2>
+          </div>
+        </div>
+        {% include 'base/feed_component.html'%}
+        <h2>Posts by {{ user.username }}</a>
+        {% include 'base/post_component.html'%}
+      </div>
+      <!-- Room List End -->
+
+      <!-- Activities Start -->
+      {% include 'base/activity_component.html'%} 
+      <!-- Activities End -->
+    </div>
+  </main>
+  {% endblock content %}

@@ -1,0 +1,25 @@
+{% for post in user_posts  %}
+<div class="col-lg-6">
+  <div class="central-meta">
+    <ul class="photos" >
+     {% if post.image %}
+      <li style="list-style:none; margin-bottom: 40px;">
+          <img src="{{post.image.url}}" alt="">
+          <p><a style="display:flex;align-items:center;justify-content: center;" href="#">{{post.caption}}</a></p>
+      </li>
+      {% elif post.video %}
+      <li style="list-style:none;margin-bottom: 40px;">
+        <video height="400" controls> 
+          <source src="{{ post.video.url }}">
+      </video>
+      <p><a style="display:flex;align-items:center;justify-content: center;" href="#">{{post.caption}}</a></p>
+      </li
+      {% endif %} 
+ 
+
+      
+    </ul>
+    <!--<div class="lodmore"><button class="btn-view btn-load-more"></button></div>-->
+  </div><!-- photos -->
+</div><!-- centerl meta -->
+{% endfor %}
