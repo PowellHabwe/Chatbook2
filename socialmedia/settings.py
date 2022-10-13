@@ -26,7 +26,7 @@ SECRET_KEY = 'django-insecure-3wrla_lyzlu*3uv#$gvh%4a5q&-pa6(&x6x_qqei@g_0eb75h6
 DEBUG = True
 
 ALLOWED_HOSTS = ['chatbook.up.railway.app']
-CSRF_TRUSTED_ORIGINS=['chatbook.up.railway.app']
+CSRF_TRUSTED_ORIGINS=['https://chatbook.up.railway.app']
 
 
 # Application definition
